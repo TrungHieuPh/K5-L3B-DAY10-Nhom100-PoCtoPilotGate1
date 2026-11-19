@@ -2,6 +2,8 @@
 
 Ngày 19/11/2026 (GMT+7). Repo: [K5-L3B-DAY10-Nhom100-PoCtoPilotGate1](https://github.com/TrungHieuPh/K5-L3B-DAY10-Nhom100-PoCtoPilotGate1). Nhánh nhóm: [develop](https://github.com/TrungHieuPh/K5-L3B-DAY10-Nhom100-PoCtoPilotGate1/tree/develop); nhánh cá nhân: `khoa/van-hanh-phap-ly`. Đợt cập nhật lấy mốc `7df4754` từ origin/develop. Xem [báo cáo ngắn](bao-cao-thanh-vien-3.md).
 
+Tên tài liệu được chuẩn hóa thành `ban-giao-thanh-vien-3.md` và `bao-cao-thanh-vien-3.md`, dùng link tương đối trong repo. Đổi tên thư mục dự án local chưa thực hiện được vì Windows từ chối truy cập; không ảnh hưởng repo đích hoặc nhánh Git.
+
 ## Phần Khoa đã thực hiện
 
 | Phân công | Vị trí | Kết quả |

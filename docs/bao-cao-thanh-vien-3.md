@@ -19,6 +19,7 @@ Ngày 19/11/2026 (GMT+7). Repo [Nhom100](https://github.com/TrungHieuPh/K5-L3B-D
 | Kênh cảnh báo thật, người duyệt dự phòng, xác nhận dừng trong 5 phút | Cần nhóm bố trí và kiểm chứng; config chỉ ghi kênh đề xuất, stop_conditions không tự thi hành. |
 | Checkpoint/prepared và quyết định v1 | Cần cấu hình chung hoàn tất và report mới; Vĩnh chạy checkpoint, Hiếu/cả nhóm quyết. |
 | Phiếu C, runbook 4–5, v2, submission và exit ticket | Chưa nhận thẻ sự cố và chưa có bằng chứng các mốc cần thiết. |
+| Đổi tên thư mục dự án local theo tên repo mới | Đã thử nhưng Windows báo Access denied kể cả ngoài sandbox. Giữ thư mục hiện tại; tên hai file báo cáo/bàn giao và link repo đã chuẩn hóa, không ảnh hưởng commit/push. |
 
 ## Chữ ký và kiểm tra
 
