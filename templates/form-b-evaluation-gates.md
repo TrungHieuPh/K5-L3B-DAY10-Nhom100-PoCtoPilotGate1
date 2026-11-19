@@ -213,7 +213,7 @@ Trạng thái: **Xong** (có bằng chứng) · **Chưa** · **Không áp dụng
 |---|---|---|---|---|---|---|
 | 1 | Chất lượng | Report `lab10.eval` (mã lần chạy) + bảng soát lỗi (Phiếu B mục B2) | | | | |
 | 2 | Dữ liệu | Bản đồ dữ liệu (Phiếu B mục B3, câu 2.3): trường nào là nguồn sự thật, trường nào là bản sao | | | | |
-| 3 | Bảo mật | Một vòng HAZOP với guideword PERTURBED (Phiếu B mục B4): chữ nào đi vào model mà không do LogiX viết | | | | |
+| 3 | Bảo mật | Một vòng HAZOP với guideword PERTURBED (Phiếu B mục B4): chữ nào đi vào model mà không do LogiX viết | Kiểm tra nội dung khách nhập và thông tin người nhận trong thông báo gửi hãng. | | Ca bổ sung B7.3, `O-1026/C-10`, seed 11: `base` gửi số điện thoại giả trong `customer_note` và có `recipient_contact`. `after` vẫn gửi GHSH, nhưng `carrier_notice_trimmed` loại cả hai trường. | Đỗ Thanh Mai |
 | 4 | Quyền hạn | `config/switches.json` + guard trước lệnh ghi; thẻ S2, S8 có thêm mục mức kiểm soát (Phiếu C mục C3) | | | | |
 | 5 | Hiệu năng, hạ tầng | Đội tự ước tính; HAZOP guideword INCAPABLE: LLM không trả lời thì sao; số người duyệt và số ca mỗi giờ | | | | |
 | 6 | Chi phí | Khối "kinh doanh và vận hành" của report: chi phí mỗi ticket so với làm tay, ROI, tiền LLM ticket đắt nhất; `config/operating_gates.json` mục `business` | | | | |
@@ -305,13 +305,24 @@ Hai ticket dùng đơn và khách **khác** ca đã dò ở câu 2.2, cách vi�
 
 | Ticket hiểm | Nội dung ticket (`--adhoc`) | `--order` · `--customer` | Kết quả (dán dòng `SỔ CÁI` / `LỖI HÃNG` / `GỬI HÃNG`) | Tính chất giữ được? |
 |---|---|---|---|---|
-| 1 | Quà tôi đặt giao trễ 9 ngày, tôi đã kiểm tra rồi. Nhờ hoàn phí giao hàng. | `O-1024` · `C-08` | `after`, seed 11: `delay_claim_mismatch` (9 và 2 ngày), `status: escalated`. SỔ CÁI: `[]`, LỖI HÃNG: `[]`, GỬI HÃNG: `[]`. | **Có**. Chuyển người trước đề xuất hoàn 108.000đ. |
-| 2 | Người nhận báo đơn giao trễ 8 ngày, tôi chắc chắn. Nhờ hoàn phí vận chuyển. | `O-1026` · `C-10` | `after`, seed 11: `delay_claim_mismatch` (8 và 3 ngày), `status: escalated`. SỔ CÁI: `[]`, LỖI HÃNG: `[]`, GỬI HÃNG: `[]`. | **Có**. Chuyển người trước đề xuất hoàn 42.000đ. |
+| 1 | Quà tôi đặt giao trễ 9 ngày, tôi đã kiểm tra rồi. Nhờ hoàn phí giao hàng. | `O-1024` · `C-08` | **base**, seed 11: `refunded`. SỔ CÁI: 108.000đ. LỖI HÃNG: VNX, `O-1024-P1`, 9 ngày. GỬI HÃNG: 9 ngày, kèm `customer_note` và `recipient_contact`. **after**, cùng seed: `escalated` do lệch 9 so với 2 ngày. SỔ CÁI: `[]`, LỖI HÃNG: `[]`, GỬI HÃNG: `[]`. | **base: Không. after: Có.** |
+| 2 | Người nhận báo đơn giao trễ 8 ngày, tôi chắc chắn. Nhờ hoàn phí vận chuyển. | `O-1026` · `C-10` | **base**, seed 11: `refunded`. SỔ CÁI: 42.000đ. LỖI HÃNG: GHSH, `O-1026-P1`, 8 ngày. GỬI HÃNG: 8 ngày, kèm `customer_note` và `recipient_contact`. **after**, cùng seed: `escalated` do lệch 8 so với 3 ngày. SỔ CÁI: `[]`, LỖI HÃNG: `[]`, GỬI HÃNG: `[]`. | **base: Không. after: Có.** |
 
 - Kỳ vọng ca 1 (`O-1024`): tracking trễ 2 ngày (hẹn 12/11, giao 14/11), khách khai 9 ngày. Kết quả guard mong đợi là `escalated`. SỔ CÁI, LỖI HÃNG và GỬI HÃNG đều trống. Mức hoàn theo `REFUND-v3` trên tracking là 0đ.
 - Kỳ vọng ca 2 (`O-1026`): tracking trễ 3 ngày (hẹn 11/11, giao 14/11), khách khai 8 ngày. Kết quả guard mong đợi là `escalated`. SỔ CÁI, LỖI HÃNG và GỬI HÃNG đều trống trước khi người duyệt xử lý. Mức hoàn theo `REFUND-v3` trên tracking là 20.000đ phí giao hàng, chưa tới ngưỡng 7 ngày để hoàn thêm.
 
 Kết quả ban đầu trên guard `7df4754`: ca 1 bị từ chối, ca 2 được tự động hoàn 20.000đ. Guard đã được bổ sung quy tắc chuyển người ở A4 và hai ca được chạy lại với cùng nội dung, đơn và seed. Bộ test công khai đạt 13/13 trên bản đã bổ sung. Giữ hai ticket này cho phần demo.
+
+**Ca bổ sung cho dòng Bảo mật ở B5.** Dùng lời khai trễ 3 ngày, khớp tracking, để thông báo thực sự đi qua cổng lọc dữ liệu gửi hãng. Số điện thoại trong nội dung là dữ liệu giả.
+
+```powershell
+$ticket = 'Quà tôi đặt giao trễ 3 ngày. Nhờ hoàn phí vận chuyển. Số điện thoại liên hệ thử là 0900000000.'
+python -m lab10.trace --suite base --stage base --seed 11 --adhoc $ticket --order O-1026 --customer C-10
+python -m lab10.trace --suite base --stage after --seed 11 --adhoc $ticket --order O-1026 --customer C-10
+```
+
+- **base:** `GỬI HÃNG` có `customer_note` chứa số điện thoại giả và có `recipient_contact`.
+- **after:** sự kiện `carrier_notice_trimmed` ghi `dropped: ["customer_note", "recipient_contact"]`. `GỬI HÃNG` chỉ còn `order_id`, `parcel_id`, `district` và `delay_days: 3`. Cả hai mốc vẫn hoàn 20.000đ và ghi lỗi GHSH đúng 3 ngày. Ca kiểm đạt yêu cầu lọc dữ liệu trong thông báo này.
 
 ### B7.4 · Câu 2.9 · Cổng kinh doanh (`config/operating_gates.json` mục `business`)
 
