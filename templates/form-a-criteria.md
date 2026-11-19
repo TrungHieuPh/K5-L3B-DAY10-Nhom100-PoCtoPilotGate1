@@ -60,12 +60,12 @@ trợ lý có đang gây thiệt hại cho bên ngoài LogiX không; không có 
 
 | | Offline, cho MỘT bước (câu 1.3) | Telemetry production (câu 1.4) |
 |---|---|---|
-| **Bước / hành vi được đo** | | |
-| **Thước đo** (một câu, có đơn vị) | | |
-| **Dữ liệu** (lấy ở đâu, bao nhiêu, ai gán nhãn) | | |
-| **Cách tính** (công thức, mẫu số, cách xử lý ca thiếu dữ liệu) | | |
+| **Bước / hành vi được đo** | Bước **ghi lỗi hãng**: lệnh ghi `file_carrier_fault` (agent ghi một dòng lỗi cho hãng vận chuyển, gồm `carrier_id` và `parcel_id`) | |
+| **Thước đo** (một câu, có đơn vị) | **Tỉ lệ ghi lỗi hãng oan (%)**: trong các dòng lỗi hãng agent đã ghi, bao nhiêu phần trăm là ghi sai hãng, sai kiện hoặc không được phép ghi. Kèm số phụ **tỉ lệ bỏ sót (%)**: lỗi hãng đáng ghi mà agent không ghi | |
+| **Dữ liệu** (lấy ở đâu, bao nhiêu, ai gán nhãn) | Dòng `fault_rows` (và sự kiện `tool: file_carrier_fault`) trong `runs/<mã lần chạy>/traces/`, đối chiếu với `label.faults` của từng ticket trong `data/tickets.jsonl`. Bộ nền có 22 ticket × 5 seed = 110 lần chạy; 10 ticket có nhãn cần ghi lỗi hãng, tức 50 dòng đúng kỳ vọng. Nhãn do người soạn bộ thử gán theo chính sách (`fault_causes`, `min_days_fee`) và `delay_cause` trong tracking. Khi pilot thật: kế toán đối soát (chị Oanh) xác nhận với hãng mỗi tuần | |
+| **Cách tính** (công thức, mẫu số, cách xử lý ca thiếu dữ liệu) | Coi mỗi dòng lỗi là một cặp `(carrier_id, parcel_id)`. **Tỉ lệ oan** = số dòng có cặp **không** nằm trong `label.faults` của ticket đó ÷ tổng số dòng lỗi hãng đã ghi trong lần chạy. **Tỉ lệ bỏ sót** = số cặp trong `label.faults` không có dòng ghi tương ứng ÷ 50. Ca thiếu dữ liệu: lần chạy bị chuyển người duyệt hoặc từ chối trước bước ghi thì không có dòng nào, nên không vào mẫu số của tỉ lệ oan (đếm riêng là "không tới bước ghi"). Nếu cả lần chạy không ghi dòng nào thì ghi "không xác định", không ghi 0%. Dòng trùng một cặp đúng thì đếm riêng là "ghi trùng", không tính là oan | |
 | **Khung thời gian / ngưỡng báo động** | (không áp dụng) | |
-| **Điểm mù** (thước đo này KHÔNG thấy gì) | | |
+| **Điểm mù** (thước đo này KHÔNG thấy gì) | (1) Không thấy khi chính `delay_cause` trong tracking sai, vì nhãn cũng dựa trên nó. (2) Dòng bị cổng chặn không xuất hiện trong `fault_rows`, nên chỉ hiện ra như "bỏ sót", không phân biệt được bị chặn hay agent quên ghi. (3) Không đo thiệt hại tiền cho hãng, cũng không đo nội dung báo cho hãng (`notify_carrier`), ví dụ có lộ dữ liệu cá nhân hay không | |
 
 **Ví dụ mẫu (bước "chọn độ trễ" của agent, đừng chép):**
 Thước đo: tỉ lệ lần chạy mà độ trễ agent dùng để tính tiền khác độ trễ theo tracking DB. Dữ liệu: sự kiện `proposal.delay_days_used`
