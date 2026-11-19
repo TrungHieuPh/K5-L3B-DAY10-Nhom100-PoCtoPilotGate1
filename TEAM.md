@@ -150,19 +150,21 @@ Thành viên 3 — Vận hành và pháp lý. Theo phân công Khối 1: Phiếu
 
 Đã dùng trợ lý AI Codex để đọc yêu cầu, đối chiếu code/dữ kiện mock, hỗ trợ soạn phiếu, cập nhật cấu hình và bàn giao. Ngưỡng phản ứng/kênh cảnh báo cần nhóm xác nhận trước pilot thật; không thay ngưỡng chấp nhận đã ký. Không chạy eval/trace/grade trên máy Khoa.
 
-Vòng 2 (thẻ S3): trưởng nhóm phân Khoa làm PIC trong Phiếu C, Khoa cần xác nhận:
-- C10 dòng 1: rủi ro ngày bão, lỗi dồn cho một hãng hoặc nguyên nhân trễ ghi sai.
-- C11 dòng 5, Hiệu năng/hạ tầng: còn **Chưa**. Chưa đo thời gian xác nhận lỗi bị cổng 2b giữ, và chưa đo hai lệnh ghi lỗi chạy song song.
-- C11 dòng 7, Vận hành: kênh `OPS-PILOT-GATE1` và 2 stop_condition "Thẻ S3 · …".
-- C11 dòng 8, Con người/pháp lý: NV-OANH chỉ báo hãng lỗi đã được xác nhận (Runbook 4).
+Vòng 2 (thẻ S3): tôi xác nhận nhận trách nhiệm PIC ở đủ bốn dòng được phân công trong [Phiếu C](templates/form-c-incident.md):
+
+- **C10 dòng 1 — Risk register:** tôi là PIC theo dõi rủi ro ngày bão, lỗi dồn theo hãng hoặc nguyên nhân trễ ghi sai. `max_auto_strikes_per_carrier_day` bằng 2 là vàng, lớn hơn 2 là đỏ; `carrier_strike_cap_held_rate` > 0,2/ca cần báo PIC, `tracking_cause_missing_rate` > 0 cần đội tracking bổ sung nguyên nhân. Phối hợp NV-TUNG dừng ghi lỗi khi vượt trần và NV-HANH xác nhận lỗi bị giữ trong 60 phút, theo phương án ở C10.
+- **C11 dòng 5 — Hiệu năng/hạ tầng:** tôi xác nhận là PIC và giữ trạng thái **Chưa**. Report S3/bộ nền ghi chờ lâu nhất 0 phút, ca ùn 0 với 1 người/6 ca giờ, kiểm mẫu 10%; chưa đo thời gian xác nhận lỗi bị cổng 2b giữ vì phần việc này không vào hàng chờ của report, và chưa kiểm hai lệnh ghi lỗi chạy song song. Cần đo hai phần này trước khi kết luận đáp ứng vận hành thật.
+- **C11 dòng 7 — Vận hành:** tôi xác nhận là PIC, trạng thái **Xong trong mock** theo ba monitor ở C8 và hai stop_condition "Thẻ S3 · …" do Hiếu bổ sung. Kênh `OPS-PILOT-GATE1`, tích hợp cảnh báo, thời gian phản ứng và người duyệt dự phòng vẫn cần được xác nhận/kiểm chứng trước pilot thật; cấu hình stop_condition không tự gửi cảnh báo hoặc tự dừng hệ thống.
+- **C11 dòng 8 — Con người/pháp lý:** tôi xác nhận là PIC theo bằng chứng lỗi hãng oan trên S3 giảm 35 → 10 → 0, PII = 0. NV-OANH là đầu mối báo hãng và chỉ báo lỗi đã được xác nhận theo Runbook 4; NV-HANH xác nhận lỗi bị giữ trước khi chuyển đối soát. Kết quả mock chưa chứng minh nguyên nhân trễ có ghi luôn đúng ngoài thực tế.
 
 ### Bằng chứng
 
-`templates/form-a-criteria.md` A1 câu 1.2, A2 cột telemetry, A4 Bước 2 và A5; `templates/form-b-evaluation-gates.md` B4–B6, B7.5–B7.6; `config/operating_gates.json` operations/legal. Chuẩn bị ban đầu: `4c435e3`; mốc develop tiếp nhận: `7df4754`; chữ ký chung giữ nguyên: `9726c53`. Báo cáo và bàn giao: [báo cáo TV3](docs/bao-cao-thanh-vien-3.md), [bàn giao TV3](docs/ban-giao-thanh-vien-3.md). Nhánh `khoa/van-hanh-phap-ly`; run_id cũ do Vĩnh ghi ở B0, chưa có run mới cho cấu hình Khoa. Xem log nhánh để truy vết commit tích hợp.
+`templates/form-a-criteria.md` A1 câu 1.2, A2 cột telemetry, A4 Bước 2 và A5; `templates/form-b-evaluation-gates.md` B4–B6, B7.5–B7.6; `config/operating_gates.json` operations/legal. Chuẩn bị ban đầu: `4c435e3`; mốc develop tiếp nhận: `7df4754`; chữ ký chung giữ nguyên: `9726c53`. Báo cáo trước vòng 2: [báo cáo TV3](docs/bao-cao-thanh-vien-3.md). Nhánh `khoa/van-hanh-phap-ly`, commit `09fb41c` cập nhật sau chốt vòng 1; B0 dòng 4 (`R-base-after-20261119-164159-01762c`) và dòng 3 (`R-base-prepared-20261119-165616-9e4070`, checkpoint `88d3403e`) do Vĩnh chạy đã bao gồm operations/legal. Vòng 2 đối chiếu C8–C11 và [grade cuối](submission/runs/grade-report.md), mã `R-S3-grade-20261119-172310-ea4958`, do Hiếu chạy: **PASS-VISIBLE**, chưa có kết quả test ẩn. Khoa không tự chạy eval/trace/grade.
 
 ### Exit ticket
 
-Chưa viết kết luận cuối buổi: chờ hoàn thành vòng sự cố và tự ghi một điều học được, một điều còn chưa chắc từ kết quả thực tế.
+- **Một điều học được:** cổng xét từng ticket đúng vẫn có thể để lọt tác hại cộng dồn theo hãng/ngày. Trên S3, cổng vòng 1 giảm lỗi oan từ 35 xuống 10; bổ sung trần 2 lỗi tự động/hãng/ngày mới đưa về 0. Về vận hành, mỗi tín hiệu phải có người nhận, hành động và thời hạn; ghi `stop_conditions` trong config chưa chứng minh hệ thống đã tự dừng hay gửi cảnh báo.
+- **Một điều còn chưa chắc:** NV-HANH có xác nhận các lỗi bị giữ trong 60 phút khi tải tăng hoặc ngày bão hay không, vì report chưa đo phần việc này. Cần đo thêm khả năng vượt trần khi ghi song song, nguyên nhân trễ có ghi nhưng sai và khả năng phản ứng của kênh cảnh báo/người dự phòng. Vì vậy tôi giữ C11 dòng 5 là **Chưa**, và cần kiểm chứng kết quả mock trong pilot thật.
 
 
 ## DoThanhMai-2A202603862
