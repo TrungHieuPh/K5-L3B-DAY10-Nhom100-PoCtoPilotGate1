@@ -83,15 +83,53 @@ Vai chính: Kỹ sư cổng. Viết `lab10/guards.py`, chạy eval/trace/gate, t
 
 ### Đóng góp cụ thể
 
-Đang thực hiện.
+> Trưởng nhóm tổng hợp mục này từ Phiếu A, B, C và ghi chú bàn giao của Khoa ([docs/ban-giao-thanh-vien-3.md](docs/ban-giao-thanh-vien-3.md), [docs/bao-cao-thanh-vien-3.md](docs/bao-cao-thanh-vien-3.md)). Vĩnh cần đọc lại và sửa chỗ nào chưa đúng.
+
+- Khối 1, Phiếu A câu 1.3: viết cột Offline, tức metric offline cho bước ghi lỗi hãng. Khoa ghi "giữ cột Offline của Vĩnh" khi gộp A2.
+- Khối 2A:
+  - Chạy lần đánh giá đầu tiên (B1) và ghi hai run_id đầu ở B0 (base, after).
+  - Ghi trace `T-002@55` cho B2. Mai là người phân tích lỗi trên trace này.
+- Khối 2B, B7.1: viết cổng vòng 1 trong `lab10/guards.py`:
+  - số tiền hoàn tính theo tracking;
+  - chỉ ghi lỗi hãng khi có nguyên nhân đã ghi;
+  - cắt trường gửi hãng ngoài danh sách cho phép;
+  - ghim phiên bản chính sách theo ngày.
+- Cập nhật B7.1 và B0 dòng 4 sau khi Mai thêm lớp 1a (khách khai lệch tracking thì chuyển người).
+- Đo lại bộ nền sau khi tích hợp cấu hình `operations`/`legal` của Khoa và `business` của Hiếu. Chạy `lab10.checkpoint` chốt cổng vòng 1, mốc prepared `88d3403e` (B0 dòng 3).
+- Điền số liệu cho quyết định v1 ở B8. B8 ghi Vĩnh là "người điền số liệu".
+- PIC ở B5 dòng 1 (Chất lượng) và dòng 4 (Quyền hạn).
+- Ở Runbook 1 và 3 (B7.5): phụ trách hiện thực và kiểm kỹ thuật đường dừng, cùng NV-TUNG.
+- Vòng 2 (thẻ S3): PIC dòng 1 Chất lượng ở checklist C11. Code và các lần chạy vòng 2 làm trên máy Hiếu (xem mục của Hiếu).
 
 ### Bằng chứng
 
-Mã commit, mã lần chạy, trace và dòng trong Phiếu B/C sẽ được bổ sung.
+- Phiếu B ghi rõ: "B0 có hai run_id do Vĩnh ghi, và `guards.py` có cổng ở `95e0912`" ([B4](templates/form-b-evaluation-gates.md#b4), dòng người phân tích). Thêm nữa: "B2 có trace do Vĩnh ghi" (B5 dòng 1) và "người điền số liệu: Ngô Chí Vĩnh" (B8).
+- Commit vòng 1 mang tên git `2A202603763 <2A202603763@example.com>`, đẩy từ một máy khác máy Hiếu. Gán cho Vĩnh theo các dòng phiếu trên; Vĩnh cần xác nhận.
+
+  | Commit | Nội dung |
+  |---|---|
+  | `b9f53ee` | Phiếu A câu 1.3 |
+  | `95e0912` | Cổng vòng 1 trong `guards.py` |
+  | `7df4754` | Phiếu B: B0, B1, B2, B7.1–B7.3 |
+  | `8d814f7` | B7.1 và B0 dòng 4 |
+  | `b2f4a0f` | 8 monitor vòng 1 |
+  | `32177ab`, `2b47d5a` | Chốt vòng 1 và giữ CRLF cho bản chốt |
+  | `c66532f` | B8 v1 |
+
+- Mã lần chạy ở B0:
+
+  | Dòng B0 | Mã |
+  |---|---|
+  | 1 · base | `R-base-before-20261119-160755-bde05c` |
+  | 2 · after | `R-base-after-20261119-161206-2543cf` |
+  | 4 · after, có lớp 1a | `R-base-after-20261119-164159-01762c` |
+  | 3 · prepared | `R-base-prepared-20261119-165616-9e4070` |
+
+- Nhật ký `runs/` của vòng 1 nằm trên máy Vĩnh, vì `runs/` bị gitignore. Vĩnh cần giữ journal và report gốc.
 
 ### Exit ticket
 
-Một điều học được, một điều còn chưa chắc.
+_Vĩnh tự viết; trưởng nhóm không viết thay._ Một điều học được, một điều còn chưa chắc.
 
 ## LeVietKhoa-2A202603737
 
@@ -104,6 +142,12 @@ Thành viên 3 — Vận hành và pháp lý. Theo phân công Khối 1: Phiếu
 Đã đồng bộ nhánh cá nhân với develop, giữ phần Offline/tiêu chí của nhóm và bổ sung mục tiêu của kế toán/trưởng ca, Telemetry, bốn câu soát A4; ghi metadata chữ ký đại diện có sẵn ở A5. Hoàn thiện HAZOP `file_carrier_fault` (5 dòng kỹ thuật, 3 dòng ngoài kỹ thuật), checklist đủ 9 nhóm với PIC có tên, hai đóng góp pre-mortem, runbook 1–3 và giờ cao điểm. Đã điền riêng operations/legal trong operating_gates: NV-TUNG là PIC, NV-HANH duyệt, 1 người/6 ca giờ, SLA 60 phút, ghi chú, kiểm mẫu 10%, chặn hai trường gửi hãng và yêu cầu nguyên nhân ghi lỗi. Giữ nguyên business của Hiếu, code của Vĩnh và tiêu chí đã ký. Chưa coi cấu hình mới là đã đạt trước khi Vĩnh đo lại.
 
 Đã dùng trợ lý AI Codex để đọc yêu cầu, đối chiếu code/dữ kiện mock, hỗ trợ soạn phiếu, cập nhật cấu hình và bàn giao. Ngưỡng phản ứng/kênh cảnh báo cần nhóm xác nhận trước pilot thật; không thay ngưỡng chấp nhận đã ký. Không chạy eval/trace/grade trên máy Khoa.
+
+Vòng 2 (thẻ S3): trưởng nhóm phân Khoa làm PIC trong Phiếu C, Khoa cần xác nhận:
+- C10 dòng 1: rủi ro ngày bão, lỗi dồn cho một hãng hoặc nguyên nhân trễ ghi sai.
+- C11 dòng 5, Hiệu năng/hạ tầng: còn **Chưa**. Chưa đo thời gian xác nhận lỗi bị cổng 2b giữ, và chưa đo hai lệnh ghi lỗi chạy song song.
+- C11 dòng 7, Vận hành: kênh `OPS-PILOT-GATE1` và 2 stop_condition "Thẻ S3 · …".
+- C11 dòng 8, Con người/pháp lý: NV-OANH chỉ báo hãng lỗi đã được xác nhận (Runbook 4).
 
 ### Bằng chứng
 
@@ -126,6 +170,7 @@ Vai phụ: Kỹ sư cổng hỗ trợ / kiểm thử. Viết behavioral test, d�
 - Phân tích trace `T-002@55` ở Phiếu B, mục B2: hoàn sai 20.000đ, ghi lỗi oan cho VNX và gửi số ngày trễ sai kèm trường `customer_note`.
 - Thiết kế và chạy hai ca kiểm thử ở Phiếu B, mục B7.3 cho `O-1024/C-08` và `O-1026/C-10`. Phát hiện guard ban đầu chưa chuyển người theo A4, bổ sung kiểm tra độ trễ trước lệnh ghi và chạy lại hai ca.
 - Dùng Codex để hỗ trợ phân tích trace và soạn nội dung các mục trên.
+- Vòng 2 (thẻ S3): PIC dòng 3 Bảo mật ở checklist C11 (do trưởng nhóm phân, Mai cần xác nhận). PII = 0 ở cả ba mốc trên S3 và bộ nền; `pii_trimmed_rate` sáng đèn ở mốc after.
 
 ### Bằng chứng
 
