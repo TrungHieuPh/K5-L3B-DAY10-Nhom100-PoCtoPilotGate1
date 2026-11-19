@@ -24,8 +24,10 @@ rồi mới chạy đánh giá. Khối 1 không sửa code.
 
 ### Câu 1.2 · Mục tiêu nhìn từ hai người
 
-- Chị Oanh, kế toán đối soát (không dùng trợ lý, nhưng phải khớp sổ với hãng và shop mỗi tuần): …
-- Chị Hạnh, trưởng ca CSKH (phải duyệt những ca trợ lý chuyển sang): …
+- Chị Oanh, kế toán đối soát (không dùng trợ lý, nhưng phải khớp sổ với hãng và shop mỗi tuần): Mỗi khoản hoàn và khoản ghi lỗi hãng phải truy được về đúng đơn, kiện, bên trả tiền, chính sách và phê duyệt có hiệu lực; sổ cái không ghi trùng khi agent thử lại. Chị có thể đối soát với hãng và shop mà không phải tự dò và sửa các khoản do trợ lý ghi sai.
+- Chị Hạnh, trưởng ca CSKH (phải duyệt những ca trợ lý chuyển sang): Nhận đúng các ca cần quyền quyết định của người, kèm căn cứ tracking, số tiền và lý do chuyển; tải duyệt nằm trong năng lực ca trực để ticket được nhận xử lý trong SLA 60 phút, và không có khoản vượt hạn mức tự động nào mượn danh chị bằng một phê duyệt không hợp lệ.
+
+Ghi chú của Lê Viết Khoa (thành viên 3): mục tiêu dựa trên `data/world.json` mục `staff`, `ops_limits`, `ops_facts` và luồng ghi trong `lab10/agent.py`. Chờ thành viên 1 cung cấp PRD v1.1 Lab 9 đã chọn để đối chiếu các mục §2, §6; chưa xác nhận đã đối chiếu PRD.
 
 ---
 
@@ -48,12 +50,12 @@ trợ lý có đang gây thiệt hại cho bên ngoài LogiX không; không có 
 
 | | Offline, cho MỘT bước (câu 1.3) | Telemetry production (câu 1.4) |
 |---|---|---|
-| **Bước / hành vi được đo** | | |
-| **Thước đo** (một câu, có đơn vị) | | |
-| **Dữ liệu** (lấy ở đâu, bao nhiêu, ai gán nhãn) | | |
-| **Cách tính** (công thức, mẫu số, cách xử lý ca thiếu dữ liệu) | | |
-| **Khung thời gian / ngưỡng báo động** | (không áp dụng) | |
-| **Điểm mù** (thước đo này KHÔNG thấy gì) | | |
+| **Bước / hành vi được đo** | | Nội dung thông báo đã gửi ra hãng qua `notify_carrier`, bảo vệ cả người mua và người nhận quà. |
+| **Thước đo** (một câu, có đơn vị) | | Số thông báo gửi hãng có ít nhất một khóa payload ngoài danh sách được phép theo chính sách đang hiệu lực, đơn vị: thông báo/15 phút. Đây là tín hiệu nghi ngờ lộ dữ liệu, không phải nhãn xác nhận vi phạm. |
+| **Dữ liệu** (lấy ở đâu, bao nhiêu, ai gán nhãn) | | Toàn bộ thông báo `outbound` có `to` bắt đầu bằng `carrier:` trong cửa sổ; payload và ticket_id; danh sách `carrier_notice_fields` của chính sách có hiệu lực theo ngày. Trong mock: `world.outbound`, sự kiện tool `notify_carrier` và `data/world.json` mục `policies`; monitor được nhận `trial.outbound` không có nhãn. Không dùng `label`, `pass`, `pii_leaks` hay gán nhãn tay. Production cần log thời điểm gửi và phiên bản chính sách; mock chưa có timestamp từng thông báo nên chưa kiểm chứng cửa sổ 15 phút. |
+| **Cách tính** (công thức, mẫu số, cách xử lý ca thiếu dữ liệu) | | Với mỗi thông báo gửi hãng m, so `set(m.payload.keys())` với tập A = `carrier_notice_fields` của chính sách hiệu lực. Cộng 1 nếu có khóa ngoài A, hoặc không xác định được payload/chính sách; mỗi thông báo chỉ đếm một lần. Đếm riêng ca thiếu dữ liệu để điều tra. Nếu cần tỷ lệ, chia số thông báo nghi ngờ cho tổng thông báo gửi hãng cùng cửa sổ; mẫu số 0 thì tỷ lệ là không áp dụng, không coi là bằng chứng an toàn. A hiện gồm `order_id`, `parcel_id`, `district`, `delay_days`; `customer_note` và `recipient_contact` nằm ngoài A. |
+| **Khung thời gian / ngưỡng báo động** | (không áp dụng) | Đề xuất trước khi đo: cửa sổ trượt 15 phút; từ 1 thông báo nghi ngờ thì báo NV-TUNG, tạm ngừng gửi hãng để kiểm tra; mục tiêu dừng trong 5 phút từ tín hiệu đỏ. Chờ cả nhóm chốt trước khi ký tiêu chí; chưa có cơ chế cảnh báo/dừng tự động được triển khai. |
+| **Điểm mù** (thước đo này KHÔNG thấy gì) | | Không phát hiện chắc chắn PII ẩn trong giá trị của khóa được phép, DB/chính sách sai, gửi nhầm hãng hoặc lỗi ghi oan. Chỉ thấy thông báo sau khi gửi nên không thu hồi được dữ liệu đã rời hệ thống. Cần bộ lọc trước gửi trong `legal` và kiểm tra cổng ghi; telemetry này chưa được cài vào `MONITORS`, cũng chưa có giá trị đo. |
 
 **Ví dụ mẫu (bước "chọn độ trễ" của agent, đừng chép):**
 Thước đo: tỉ lệ lần chạy mà độ trễ agent dùng để tính tiền khác độ trễ theo tracking DB. Dữ liệu: sự kiện `proposal.delay_days_used`
@@ -112,10 +114,12 @@ Giải thích một câu: …
 
 | Câu hỏi soát | Ghi chú của bàn |
 |---|---|
-| Chỉ số này có ý nghĩa với **mọi** bên liên quan không (khách, hãng vận chuyển, shop, người duyệt, kế toán)? | |
-| Chạy theo chỉ số này có thể làm **ai thiệt** (ví dụ ép tỉ lệ tự động cao thì ai gánh)? | |
-| Đây có phải nghĩa của "thành công" ở **ngày 1** của pilot không? | |
-| Còn ở **ngày thứ 1.000** (12 depot, chính sách đã đổi vài lần)? Ngưỡng nào sẽ phải viết lại? | |
+| Chỉ số này có ý nghĩa với **mọi** bên liên quan không (khách, hãng vận chuyển, shop, người duyệt, kế toán)? | Không dùng riêng pass_rate/pass^k để đại diện thành công. Khách cần được hoàn đúng và được tiếp nhận đúng hạn; hãng/tài xế cần không bị ghi lỗi oan; shop cần không bị trừ tiền sai; người nhận quà cần không lộ liên hệ; NV-HANH cần hàng chờ trong sức duyệt; NV-OANH cần sổ cái đúng và truy vết được. Do đó phải đọc đồng thời hoàn sai, lỗi hãng oan, PII, hàng chờ, chi phí/ROI và phân khúc kho/hãng; telemetry A2 chỉ phát hiện thông báo ngoài allowlist, không thay các kiểm tra này. Chờ TV1 chốt các câu tiêu chí ở Bước 1 để đối chiếu từng câu trước ký. |
+| Chạy theo chỉ số này có thể làm **ai thiệt** (ví dụ ép tỉ lệ tự động cao thì ai gánh)? | Ép giảm escalation_rate có thể khiến khách, shop và hãng chịu quyết định thiếu căn cứ; chuyển hết cho người có thể làm số an toàn đẹp hơn nhưng dồn tải và trách nhiệm sang NV-HANH, làm khách chờ quá SLA 60 phút. Ép giảm tiền máy có thể bỏ kiểm tra cần thiết; kiểm lại mọi quyết định hoặc thêm người không giới hạn làm mất tiết kiệm so với 10.000đ làm tay/ticket. Tối ưu số trung bình có thể che một kho/hãng bị hại. Cần giữ ranh giới quyền hạn, xem tải và chi phí theo phân khúc, ghi rõ đường thủ công cho ticket bị thu hẹp, không thu phạm vi về 0 để làm xanh report. |
+| Đây có phải nghĩa của "thành công" ở **ngày 1** của pilot không? | Ngày đầu cần phạm vi pilot được phê duyệt, người duyệt có thẩm quyền, khả năng dừng đã kiểm chứng và các ngưỡng bắt buộc được ký trước đo. Đề xuất vận hành của TV3 là SLA tiếp nhận 60 phút, cảnh báo sớm 30 phút và mục tiêu dừng 5 phút; hai ngưỡng sau cần nhóm thống nhất, chưa phải kết quả đo. Một người chỉ có năng lực 6 ca/giờ theo mock nên phải kiểm report hàng chờ, công kiểm lại và ROI trước khi nhận là đủ tải. Chỉ kết luận thành công trong phạm vi/bộ thử đã đo; chưa có report hoặc chưa có kênh/người trực thực thì chưa xác nhận đủ điều kiện chạy thật. |
+| Còn ở **ngày thứ 1.000** (12 depot, chính sách đã đổi vài lần)? Ngưỡng nào sẽ phải viết lại? | Ngân sách, số người/công suất, phạm vi, chi phí/ticket, ROI, cảnh báo tải và mức kiểm mẫu phải được đánh giá lại theo lưu lượng từng depot và hành vi kiểm lại thực tế; không nhân nguyên phương án 1 người cho toàn hệ thống. Theo dõi phiên bản chính sách theo ngày hiệu lực và danh sách trường được gửi hãng; ngay trong mock v4 bắt đầu 2026-12-01 đã đổi hạn mức tự động và nguyên nhân quy lỗi. Không nới mục tiêu không ghi oan/không lộ dữ liệu chỉ vì tăng quy mô. Nếu cần đổi tiêu chí thì lập bản cho đợt đánh giá sau, có dữ kiện và ký trước đo; giữ nguyên acceptance_criteria đã ký của lab hiện tại. |
+
+Người soát Bước 2: Lê Viết Khoa — 2A202603737. Đã hoàn thành nội dung rà soát trước đo theo phân công; cả nhóm còn phải đối chiếu bốn câu này với từng ngưỡng/câu tiêu chí do TV1 chốt ở Bước 1. Không chạy eval hoặc trace để viết phần này.
 
 #### Bước 3 · Chốt và hẹn ngày xem lại
 
