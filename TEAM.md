@@ -66,7 +66,14 @@ Vai chính: Trưởng nhóm và Sản phẩm và kinh doanh. Chủ trì tiêu ch
 
 ### Exit ticket
 
-Một điều học được, một điều còn chưa chắc.
+- **Điều học được:**
+  - Cổng vòng 1 đỡ được 25/35 lỗi oan trên thẻ S3 nhưng bỏ sót 10 lỗi. Lý do là mọi cổng chỉ xét từng ticket một, trong khi tác hại nằm ở tổng trong ngày: lỗi thứ 3, thứ 4 của cùng một hãng.
+  - Trần 2 lỗi/hãng/ngày đã có sẵn trong `ops_limits`. Bàn cũng đã ghi chú nó ở B7.4 nhưng hoãn lại.
+  - Từ nay, khi đặt tiêu chí và cổng, tôi phải hỏi thêm câu "cộng dồn theo ngày, theo hãng thì sao", không chỉ "ticket này đúng chưa".
+- **Điều còn chưa chắc:**
+  - Ở hệ thật, nguyên nhân trễ (`delay_cause`) có được ghi đúng sự thật và kịp thời không, nhất là ngày bão. Cổng 2 và cổng 2b đều tin hoàn toàn vào trường này.
+  - NV-HANH có xác nhận kịp các lỗi bị giữ trong 60 phút không.
+  - Mock không đo được hai điều này, nên phải đo trong pilot trước Bước đánh giá 2.
 
 ## NgoChiVinh-2A202603724
 
