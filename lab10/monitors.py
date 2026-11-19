@@ -90,6 +90,32 @@ def avg_cost_per_ticket_vnd(trials):
     return round(sum(t.get("cost_vnd") or 0 for t in trials) / max(1, len(trials)), 2)
 
 
+def max_auto_strikes_per_carrier_day(trials):
+    """PHÁP LÝ / ĐỐI TÁC (thẻ S3) · Số lỗi hãng trợ lý tự ghi nhiều nhất cho MỘT hãng trong MỘT ngày giả lập.
+    Dữ liệu: `faults` của từng trial, gộp theo (seed, day, carrier_id). So với ops_limits
+    `max_auto_strikes_per_carrier_per_day` = 2: lớn hơn 2 = có lỗi thứ 3 trở đi chưa qua người xác nhận."""
+    per_day = {}
+    for t in trials:
+        for f in t.get("faults") or []:
+            key = (t.get("seed"), t.get("day"), f.get("carrier_id"))
+            per_day[key] = per_day.get(key, 0) + 1
+    return max(per_day.values()) if per_day else 0
+
+
+def carrier_strike_cap_held_rate(trials):
+    """VẬN HÀNH (thẻ S3) · Tỉ lệ ticket mà cổng giữ lại một lỗi hãng vì hãng đã chạm trần lỗi tự động trong ngày.
+    Dữ liệu: sự kiện guard `carrier_strike_cap_held`. Mỗi ca là một lỗi chờ NV-HANH xác nhận; tăng = một hãng đang
+    trễ hàng loạt (thời tiết, sự cố tuyến) hoặc agent đang ghi lỗi dồn cho một hãng."""
+    return _rate(trials, lambda t: _has(t, "guard", kind="carrier_strike_cap_held"))
+
+
+def tracking_cause_missing_rate(trials):
+    """DỮ LIỆU (thẻ S3, guideword INCOMPLETE) · Tỉ lệ ticket mà tracking chưa ghi nguyên nhân trễ
+    (`tracking.cause_recorded` = False). Không dùng nhãn. Tăng = nguồn tracking đang thiếu dữ liệu, mọi quyết định ghi lỗi
+    hãng trên các đơn này phải chờ người; không được mặc định đổ lỗi cho hãng."""
+    return _rate(trials, lambda t: _has(t, "tracking", cause_recorded=False))
+
+
 MONITORS = {
     "escalation_rate": escalation_rate,     # có sẵn; KHÔNG tính là metric mới của đội
     "claim_override_rate": claim_override_rate,
@@ -100,5 +126,8 @@ MONITORS = {
     "pii_trimmed_rate": pii_trimmed_rate,
     "peak_queue_wait_min": peak_queue_wait_min,
     "avg_cost_per_ticket_vnd": avg_cost_per_ticket_vnd,
+    "max_auto_strikes_per_carrier_day": max_auto_strikes_per_carrier_day,
+    "carrier_strike_cap_held_rate": carrier_strike_cap_held_rate,
+    "tracking_cause_missing_rate": tracking_cause_missing_rate,
 }
 STARTER_MONITORS = ("escalation_rate",)

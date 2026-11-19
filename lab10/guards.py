@@ -151,6 +151,18 @@ def _gate_carrier_fault(ctx, action):
         ctx.log("carrier_fault_blocked", parcel_id=parcel["parcel_id"], db_delay_days=delay,
                 recorded_cause=parcel.get("delay_cause"))
         return Verdict.deny("tracking không cho thấy lỗi của hãng (trễ chưa đủ hoặc nguyên nhân không thuộc lỗi hãng)")
+    # 2b (vòng 2, thẻ S3). Trần lỗi tự động mỗi hãng mỗi ngày (ops_limits, đã thống nhất với Ops): từ lỗi thứ
+    # (trần + 1) của cùng một hãng trong ngày phải có người LogiX xác nhận. Chỉ bỏ lệnh ghi lỗi, KHÔNG chặn hoàn tiền:
+    # quyền lợi của khách tính độc lập với việc có ghi lỗi hãng hay không. Đếm theo hãng của kiện bị trễ (nguồn sự thật),
+    # không theo carrier_id model đề xuất.
+    carrier_id = parcel["carrier_id"]
+    limit = ctx.tools.ops_limits().get("max_auto_strikes_per_carrier_per_day")
+    strikes_today = len(ctx.tools.fault_rows(carrier_id=carrier_id))
+    if limit is not None and strikes_today >= limit:
+        ctx.log("carrier_strike_cap_held", carrier_id=carrier_id, parcel_id=parcel["parcel_id"],
+                strikes_today=strikes_today, limit=limit)
+        return Verdict.deny(f"hãng {carrier_id} đã có {strikes_today} lỗi tự động hôm nay (trần {limit}): "
+                            f"lỗi tiếp theo chờ người LogiX xác nhận, không ghi tự động")
     fix = {}
     if action.get("parcel_id") != parcel["parcel_id"]:
         fix.update(parcel_id=parcel["parcel_id"], carrier_id=parcel["carrier_id"], driver_id=parcel.get("driver_id"))
