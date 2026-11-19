@@ -1,12 +1,17 @@
 {
-  "team": "",
-  "members": [],
-  "incident": "",
-  "decision_v1": "",
-  "decision_v2": "",
+  "team": "K5-L3B-DAY10-Nhom100-PoCtoPilotGate1",
+  "members": [
+    "PhanTrungHieu-2A202603763",
+    "NgoChiVinh-2A202603724",
+    "LeVietKhoa-2A202603737",
+    "DoThanhMai-2A202603862"
+  ],
+  "incident": "S3",
+  "decision_v1": "Tiếp tục",
+  "decision_v2": "Tiếp tục",
   "three_lines": {
-    "environment_assumption": "",
-    "reduce_or_prevent": "",
-    "measure_in_pilot": ""
+    "environment_assumption": "Nguyên nhân trễ (delay_cause) trong tracking được hãng hoặc điều phối ghi đúng sự thật và ghi xong trước khi khách gửi ticket, và mọi lỗi đã ghi cho hãng trong ngày đều nằm trong cùng bảng mà cổng đếm; vào ngày bão cả hai điều này đều có thể sai.",
+    "reduce_or_prevent": "Trong mock, cổng NGĂN được các nhánh đã biết vì nó chặn lệnh ghi trước khi chạy và đọc từ nguồn sự thật (ngày hiệu lực chính sách, nguyên nhân đã ghi, trần ops_limits). Nhưng cổng chỉ GIẢM khả năng khi nguyên nhân có ghi mà ghi sai, khi hai lệnh ghi lỗi chạy song song, và khi lỗi bị giữ phụ thuộc NV-HANH xác nhận kịp trong 60 phút.",
+    "measure_in_pilot": "Đo tỉ lệ nguyên nhân trễ bị thiếu hoặc ghi sai theo hãng và kho (nhất là CT, DN mùa bão); số lỗi tự động mỗi hãng mỗi ngày tính theo ngày thật; thời gian NV-HANH xác nhận lỗi bị giữ; và escalation_rate cùng chi phí mỗi ticket sau 2026-12-01, khi REFUND-v4 hạ hạn mức tự động xuống 100.000đ."
   }
 }

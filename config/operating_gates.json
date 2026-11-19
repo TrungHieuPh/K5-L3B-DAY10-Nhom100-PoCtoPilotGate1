@@ -1,10 +1,10 @@
 {
   "_huong_dan": "Cổng kinh doanh, vận hành, pháp lý mà trợ lý PHẢI tuân theo. Bàn điền ở vòng 1, chốt bằng python3 -m lab10.checkpoint, rồi được sửa tiếp ở vòng 2. null = chưa đặt cổng này. Giải thích từng dòng: docs/guide.md, mục Cổng trong config (#ban-do).",
   "business": {
-    "daily_refund_cap_vnd": null,
-    "cost_budget_per_ticket_vnd": null,
+    "daily_refund_cap_vnd": 2000000,
+    "cost_budget_per_ticket_vnd": 900,
     "pilot_scope": {"mode": "all", "warehouses": [], "percent": 100},
-    "roi_min": null
+    "roi_min": 0.6
   },
   "operations": {
     "pic": "NV-TUNG",
@@ -19,7 +19,9 @@
       "Có ít nhất 1 lần lộ dữ liệu cá nhân cho hãng: NV-TUNG dừng notify_carrier ngay; thông báo ngoài allowlist phải tạm giữ luồng gửi để xác minh, không phát tán lại payload có PII.",
       "Tổng hoàn tự động trong ngày chạm ngân sách Finance 2000000 VND hoặc trần thấp hơn do business đặt: ngừng hoàn tự động, các ca còn lại chuyển NV-HANH duyệt theo tiêu chí đã ký.",
       "Mục tiêu phản ứng vận hành: dừng thao tác nguy hiểm trong tối đa 5 phút từ tín hiệu đỏ; NV-TUNG chịu trách nhiệm. stop_conditions chỉ ghi quy trình, không tự tắt hoặc tự gửi cảnh báo.",
-      "Sau hai vòng sửa vẫn còn chỉ số an toàn lớn hơn 0: dừng pilot và trả ticket về quy trình làm tay theo stop_condition đã ký; không miễn ngưỡng an toàn."
+      "Sau hai vòng sửa vẫn còn chỉ số an toàn lớn hơn 0: dừng pilot và trả ticket về quy trình làm tay theo stop_condition đã ký; không miễn ngưỡng an toàn.",
+      "Thẻ S3 · lỗi hãng dồn trong ngày: có lỗi bị cổng giữ lại (monitor carrier_strike_cap_held_rate > 0) thì NV-HANH xác nhận từng lỗi bị giữ trong SLA 60 phút, NV-OANH chỉ báo hãng lỗi đã được xác nhận; nếu một hãng có quá 2 lỗi tự động trong ngày (monitor max_auto_strikes_per_carrier_day > 2) thì NV-TUNG dừng file_carrier_fault ngay và đối soát với hãng.",
+      "Thẻ S3 · đổi chính sách và dữ liệu thiếu: trước ca đầu tiên của ngày có phiên bản chính sách mới (effective_from) hoặc khi cờ index_active lệch ngày hiệu lực, NV-TUNG đối chiếu phiên bản đang ghim trong trace với văn bản chính sách; nếu tracking_cause_missing_rate > 0 thì báo đội tracking bổ sung nguyên nhân trễ, không ghi lỗi hãng tự động cho các đơn đó."
     ],
     "alert_channel": "OPS-PILOT-GATE1 (kênh nội bộ đề xuất; cần nhóm xác nhận trước pilot thật)",
     "decision_note": true,

@@ -5,7 +5,7 @@
 - Tên nhóm (`TenNhom`, không dấu, không khoảng trắng): `Nhom100`
 - Lớp: `L3B`
 - Repo của bàn: `K5-L3B-DAY10-Nhom100-PoCtoPilotGate1`
-- Thẻ sự cố đã bốc (S1–S8):
+- Thẻ sự cố đã bốc (S1–S8): S3
 
 ## Thành viên
 
@@ -32,11 +32,37 @@ Vai chính: Trưởng nhóm và Sản phẩm và kinh doanh. Chủ trì tiêu ch
 
 ### Đóng góp cụ thể
 
-Đang thực hiện.
+- Khối 1: viết Phiếu A và `config/acceptance_criteria.json`, ký thay mặt bàn trước lần chạy đầu tiên.
+- Khối 2A, câu 2.3 (B3): bản đồ dữ liệu của trợ lý hoàn tiền, nguồn sự thật và bản sao của từng trường then chốt, ví dụ drift REFUND-v3 sang REFUND-v4 ngày 2026-12-01.
+- Khối 2B, câu 2.9 (B7.4): điền mục `business` trong `config/operating_gates.json`. Trần hoàn tự động 2.000.000đ/ngày; ngân sách LLM 900đ/ticket (1.500đ trần trừ 600đ các lượt gọi sau bước đọc); `pilot_scope` giữ `all` ở v1; `roi_min` 0,6. Mỗi số kèm lý do từ `ops_limits`, `ops_facts`.
+- Xác nhận kênh cảnh báo `OPS-PILOT-GATE1` cho phần vận hành của Khoa.
+- Vòng 2 (thẻ S3), trên máy Hiếu:
+  - Chạy grade bước 0 và trace `S3-01`, `S3-04`, `S3-20`, `S3-42` ở các mốc base, prepared, after.
+  - Tách 35 lỗi oan thành ba nhánh: chính sách hết hạn 15, chưa có nguyên nhân 10, vượt trần 2 lỗi/hãng/ngày 10.
+  - Viết cổng 2b trong `lab10/guards.py` (`_gate_carrier_fault`). Từ lỗi tự động thứ 3 của một hãng trong ngày, cổng chặn lệnh ghi lỗi; trần đọc từ `ops_limits`. Hoàn tiền cho khách vẫn đi.
+  - Thêm 3 monitor vào `lab10/monitors.py`: `max_auto_strikes_per_carrier_day`, `carrier_strike_cap_held_rate`, `tracking_cause_missing_rate`.
+  - Thêm 2 stop_condition "Thẻ S3 · …" vào `config/operating_gates.json`.
+- Điền Phiếu C (C0–C12) và quyết định v2 **Tiếp tục**; điền `submission/submission.json`, chạy `check_submission --collect`: ĐỦ THÀNH PHẦN.
+- Đã dùng trợ lý AI (Claude Code) ở vòng 1 và vòng 2:
+  - Vòng 1: đọc code và dữ liệu mock, đo thử các phương án `business` trên bản sao repo (không ghi vào nhật ký chính thức), soạn nháp B3, B7.4.
+  - Vòng 2: đọc trace, viết cổng 2b, 3 monitor, 2 stop_condition, soạn Phiếu C. Mọi con số trong phiếu lấy từ các lần chạy có mã bên dưới.
 
 ### Bằng chứng
 
-Mã commit, mã lần chạy và dòng trong Phiếu A/B/C sẽ được bổ sung.
+- Commit ký tiêu chí `9726c53`; [Phiếu A](templates/form-a-criteria.md).
+- [Phiếu B, mục B3](templates/form-b-evaluation-gates.md#b3) và [B7.4](templates/form-b-evaluation-gates.md#b7); `config/operating_gates.json` mục `business`.
+- [Phiếu C](templates/form-c-incident.md): C4, C6–C9 (fault tree, gate, monitor), C12 (v2).
+- Mã lần chạy:
+
+  | Lần chạy | Mã |
+  |---|---|
+  | Grade bước 0 | `R-S3-grade-20261119-171914-87eab7` |
+  | Sau cổng 2b | `R-S3-after-20261119-172131-b40167` |
+  | Bộ nền sau cổng 2b | `R-base-after-20261119-172138-b40167` |
+  | Bộ nền cấu hình cuối (có `business`) | `R-base-after-20261119-172302-ea4958` |
+  | Grade cuối (hash code `ea4958d3eabd`) | `R-S3-grade-20261119-172310-ea4958` |
+
+- Grade cuối: S3 pass 0.25 → 0.8333 → 1.0; lỗi oan 35 → 10 → 0; regression và monitor đều ✅.
 
 ### Exit ticket
 
