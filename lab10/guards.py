@@ -79,6 +79,14 @@ def pre_guard(ctx):
 def write_gate(ctx, action):
     # action = {"tool": "issue_refund", "ticket_id":..., "order_id":..., "amount_vnd":..., "payer":..., ...}
     tool = action.get("tool")
+    if tool in ("issue_refund", "file_carrier_fault", "notify_carrier"):
+        claimed = next((event.get("claimed_delay_days") for event in ctx.events
+                        if event["type"] == "llm_extract"), None)
+        tracked = next((event.get("db_delay_days") for event in ctx.events
+                        if event["type"] == "tracking"), None)
+        if claimed is not None and tracked is not None and abs(claimed - tracked) >= 1:
+            ctx.log("delay_claim_mismatch", claimed_delay_days=claimed, db_delay_days=tracked)
+            return Verdict.escalate("số ngày trễ khách khai lệch tracking: cần người duyệt trước khi ghi")
     if tool == "issue_refund":
         return _gate_refund(ctx, action)
     if tool == "file_carrier_fault":

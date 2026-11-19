@@ -89,12 +89,18 @@ Vai phụ: Kỹ sư cổng hỗ trợ / kiểm thử. Viết behavioral test, d�
 
 ### Đóng góp cụ thể
 
-Đang thực hiện.
+- Viết hai ranh giới đầu ra ở Phiếu A, mục A4: giới hạn hoàn tự động theo tracking và chính sách, chuyển người duyệt khi lời khai lệch tracking.
+- Phân tích trace `T-002@55` ở Phiếu B, mục B2: hoàn sai 20.000đ, ghi lỗi oan cho VNX và gửi số ngày trễ sai kèm trường `customer_note`.
+- Thiết kế và chạy hai ca kiểm thử ở Phiếu B, mục B7.3 cho `O-1024/C-08` và `O-1026/C-10`. Phát hiện guard ban đầu chưa chuyển người theo A4, bổ sung kiểm tra độ trễ trước lệnh ghi và chạy lại hai ca.
+- Dùng Codex để hỗ trợ phân tích trace và soạn nội dung các mục trên.
 
 ### Bằng chứng
 
-Mã commit, mã lần chạy và dòng trong Phiếu B/C sẽ được bổ sung.
+- [Phiếu A, mục A4](templates/form-a-criteria.md#a4) và [Phiếu B, mục B2](templates/form-b-evaluation-gates.md#b2).
+- Trace `T-002@55`, mốc `base`: tracking ở dòng 02, `model_override` ở dòng 03 và các lệnh ghi ở dòng 06–08.
+- Guard vòng 1 có kiểm tra `delay_claim_mismatch`, mốc `after`: `T-002@55` đạt theo nhãn, cả hai ca tự viết chuyển người và không phát sinh lệnh ghi. Xem [B7.3](templates/form-b-evaluation-gates.md#b73). Bộ test công khai đạt 13/13.
 
 ### Exit ticket
 
-Một điều học được, một điều còn chưa chắc.
+- Điều học được: một ca đạt theo nhãn bộ nền vẫn có thể chưa đáp ứng quy trình chuyển người mà nhóm đặt ra. Cần đọc trạng thái và kiểm các hành động đã ghi.
+- Điều còn cần xác nhận: số ca chuyển duyệt khi lời khai lệch tracking có làm hàng chờ vượt SLA trong giờ cao điểm không.

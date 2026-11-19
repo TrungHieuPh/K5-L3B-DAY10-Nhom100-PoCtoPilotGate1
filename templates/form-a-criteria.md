@@ -119,8 +119,8 @@ Giải thích một câu: pass_rate 1,0 của Y nằm ngay trong khoảng tin c�
 
 Đây không phải ngưỡng chất lượng. Viết hai câu trên phiếu này thôi, không chép vào `acceptance_criteria.json`.
 
-- Một đầu ra hoặc hành động bị cấm (ví dụ không bao giờ hoàn quá X đồng): ____
-- Ngưỡng chuyển cho người duyệt: ____
+- Một đầu ra hoặc hành động bị cấm: Trợ lý không được tự động ghi hoàn vượt mức khách đủ điều kiện nhận theo tracking và chính sách có hiệu lực.
+- Ngưỡng chuyển cho người duyệt: Nếu số ngày trễ khách khai lệch tracking từ 1 ngày trở lên, chuyển ticket cho người duyệt trước khi hoàn tiền, ghi lỗi hãng hoặc gửi thông báo cho hãng.
 
 #### Bước 2 · Soát từng câu
 
