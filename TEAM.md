@@ -177,7 +177,7 @@ Vai phụ: Kỹ sư cổng hỗ trợ / kiểm thử. Viết behavioral test, d�
 - Phân tích trace `T-002@55` ở Phiếu B, mục B2: hoàn sai 20.000đ, ghi lỗi oan cho VNX và gửi số ngày trễ sai kèm trường `customer_note`.
 - Thiết kế và chạy hai ca kiểm thử ở Phiếu B, mục B7.3 cho `O-1024/C-08` và `O-1026/C-10`. Phát hiện guard ban đầu chưa chuyển người theo A4, bổ sung kiểm tra độ trễ trước lệnh ghi và chạy lại hai ca.
 - Dùng Codex để hỗ trợ phân tích trace và soạn nội dung các mục trên.
-- Vòng 2 (thẻ S3): PIC dòng 3 Bảo mật ở checklist C11 (do trưởng nhóm phân, Mai cần xác nhận). PII = 0 ở cả ba mốc trên S3 và bộ nền; `pii_trimmed_rate` sáng đèn ở mốc after.
+- Vòng 2 (thẻ S3): Tôi xác nhận là PIC dòng 3 **Bảo mật** trong [checklist C11](templates/form-c-incident.md#c11). Theo bằng chứng ở dòng này, PII = 0 ở cả ba mốc trên S3 và bộ nền. Ở mốc after, `pii_trimmed_rate` là 0,3333 trên S3 và 0,5 trên bộ nền.
 
 ### Bằng chứng
 
