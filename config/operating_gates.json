@@ -7,18 +7,26 @@
     "roi_min": null
   },
   "operations": {
-    "pic": "",
-    "approver_id": "",
+    "pic": "NV-TUNG",
+    "approver_id": "NV-HANH",
     "reviewers_on_shift": 1,
-    "review_capacity_per_hour": null,
-    "max_queue_wait_minutes": null,
-    "stop_conditions": [],
-    "alert_channel": "",
-    "decision_note": false,
-    "review_sampling_pct": 0
+    "review_capacity_per_hour": 6,
+    "max_queue_wait_minutes": 60,
+    "stop_conditions": [
+      "Thời gian chờ người duyệt vượt 60 phút hoặc có ca bị ùn: NV-TUNG điều phối hỗ trợ có thẩm quyền hoặc thu hẹp phạm vi; NV-HANH tiếp nhận và ưu tiên ca cũ, không đẩy thêm tải vào hàng chờ quá sức.",
+      "Có khoản hoàn sai hoặc phê duyệt không hợp lệ được xác nhận: NV-TUNG dừng issue_refund trong phạm vi ảnh hưởng; NV-OANH đối soát trước khi bật lại.",
+      "Có ít nhất 1 lỗi ghi oan cho hãng: NV-TUNG dừng file_carrier_fault ngay; NV-OANH làm đầu mối đối soát với hãng.",
+      "Có ít nhất 1 lần lộ dữ liệu cá nhân cho hãng: NV-TUNG dừng notify_carrier ngay; thông báo ngoài allowlist phải tạm giữ luồng gửi để xác minh, không phát tán lại payload có PII.",
+      "Tổng hoàn tự động trong ngày chạm ngân sách Finance 2000000 VND hoặc trần thấp hơn do business đặt: ngừng hoàn tự động, các ca còn lại chuyển NV-HANH duyệt theo tiêu chí đã ký.",
+      "Mục tiêu phản ứng vận hành: dừng thao tác nguy hiểm trong tối đa 5 phút từ tín hiệu đỏ; NV-TUNG chịu trách nhiệm. stop_conditions chỉ ghi quy trình, không tự tắt hoặc tự gửi cảnh báo.",
+      "Sau hai vòng sửa vẫn còn chỉ số an toàn lớn hơn 0: dừng pilot và trả ticket về quy trình làm tay theo stop_condition đã ký; không miễn ngưỡng an toàn."
+    ],
+    "alert_channel": "OPS-PILOT-GATE1 (kênh nội bộ đề xuất; cần nhóm xác nhận trước pilot thật)",
+    "decision_note": true,
+    "review_sampling_pct": 10
   },
   "legal": {
-    "pii_fields_blocked_to_third_party": [],
-    "carrier_fault_requires_recorded_cause": false
+    "pii_fields_blocked_to_third_party": ["customer_note", "recipient_contact"],
+    "carrier_fault_requires_recorded_cause": true
   }
 }
