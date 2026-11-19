@@ -4,7 +4,7 @@
 
 - Tên nhóm (`TenNhom`, không dấu, không khoảng trắng): `Nhom100`
 - Lớp: `L3B`
-- Repo của bàn: `K5_L3B_Day10_Nhom100_PoC-to-Pilot_Gate1_student`
+- Repo của bàn: `K5-L3B-DAY10-Nhom100-PoCtoPilotGate1`
 - Thẻ sự cố đã bốc (S1–S8):
 
 ## Thành viên
