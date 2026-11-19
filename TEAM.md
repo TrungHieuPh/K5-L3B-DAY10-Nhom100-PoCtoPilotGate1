@@ -68,13 +68,13 @@ Thành viên 3 — Vận hành và pháp lý. Theo phân công Khối 1: Phiếu
 
 ### Đóng góp cụ thể
 
-Đã đồng bộ nhánh cá nhân với develop, giữ phần Offline/tiêu chí của nhóm và bổ sung mục tiêu của kế toán/trưởng ca, Telemetry, bốn câu soát A4; ghi metadata chữ ký đại diện có sẵn ở A5. Hoàn thiện HAZOP `file_carrier_fault` (5 dòng kỹ thuật, 3 dòng ngoài kỹ thuật), checklist đủ 9 nhóm với PIC có tên, hai đóng góp pre-mortem, runbook 1–3 và giờ cao điểm. Đã điền riêng operations/legal trong operating_gates: NV-TUNG là PIC, NV-HANH duyệt, 1 người/6 ca giờ, SLA 60 phút, ghi chú, kiểm mẫu 10%, chặn hai trường gửi hãng và yêu cầu nguyên nhân ghi lỗi. Giữ nguyên business của Hiếu, code của Vĩnh và tiêu chí đã ký. Chưa coi cấu hình mới là đã đạt trước khi Vĩnh đo lại.
+Đã đồng bộ nhánh cá nhân với develop, giữ phần Offline/tiêu chí của nhóm và bổ sung mục tiêu của kế toán/trưởng ca, Telemetry, bốn câu soát A4; ghi metadata chữ ký đại diện có sẵn ở A5. Hoàn thiện HAZOP `file_carrier_fault` (5 dòng kỹ thuật, 3 dòng ngoài kỹ thuật), checklist đủ 9 nhóm có PIC, hai đóng góp pre-mortem, runbook 1–3 và giờ cao điểm. Đã điền operations/legal: NV-TUNG là PIC, NV-HANH duyệt, 1 người/6 ca giờ, SLA 60 phút, ghi chú, kiểm mẫu 10%, chặn hai trường gửi hãng và yêu cầu nguyên nhân ghi lỗi. Đợt 2 cập nhật B5, trạng thái B7.5 và dòng cuối B7.6 theo B0/B7.1 mới; phân biệt run đã ghi với run đợt 3 chưa có, không tự tạo số đo hoặc đổi Xong khi chưa đủ bằng chứng. Giữ nguyên business, code, monitors và tiêu chí đã ký.
 
 Đã dùng trợ lý AI Codex để đọc yêu cầu, đối chiếu code/dữ kiện mock, hỗ trợ soạn phiếu, cập nhật cấu hình và bàn giao. Ngưỡng phản ứng/kênh cảnh báo cần nhóm xác nhận trước pilot thật; không thay ngưỡng chấp nhận đã ký. Không chạy eval/trace/grade trên máy Khoa.
 
 ### Bằng chứng
 
-`templates/form-a-criteria.md` A1 câu 1.2, A2 cột telemetry, A4 Bước 2 và A5; `templates/form-b-evaluation-gates.md` B4–B6, B7.5–B7.6; `config/operating_gates.json` operations/legal. Chuẩn bị ban đầu: `4c435e3`; mốc develop tiếp nhận: `7df4754`; chữ ký chung giữ nguyên: `9726c53`. Báo cáo và bàn giao: [báo cáo TV3](docs/bao-cao-thanh-vien-3.md), [bàn giao TV3](docs/ban-giao-thanh-vien-3.md). Nhánh `khoa/van-hanh-phap-ly`; run_id cũ do Vĩnh ghi ở B0, chưa có run mới cho cấu hình Khoa. Xem log nhánh để truy vết commit tích hợp.
+`templates/form-a-criteria.md` A1 câu 1.2, A2 cột telemetry, A4 Bước 2 và A5; `templates/form-b-evaluation-gates.md` B4–B6, B7.5–B7.6; `config/operating_gates.json` operations/legal. Chuẩn bị: `4c435e3`; cập nhật đợt 2 theo develop `b2f4a0f`; chữ ký chung: `9726c53`. B0 dòng 4 do Vĩnh ghi: `R-base-after-20261119-164159-01762c`, đã có operations/legal và luật chuyển người; chưa có run sau business/8 monitor mới. Báo cáo: [TV3](docs/bao-cao-thanh-vien-3.md), [rà soát đợt 2](docs/bao-cao-tien-do-dot-2.md), [bàn giao](docs/ban-giao-thanh-vien-3.md). Khoa không chạy eval/trace/grade và chưa có report gốc trên máy. Xem log nhánh để truy vết commit cập nhật.
 
 ### Exit ticket
 
