@@ -32,11 +32,17 @@ Vai chính: Trưởng nhóm và Sản phẩm và kinh doanh. Chủ trì tiêu ch
 
 ### Đóng góp cụ thể
 
-Đang thực hiện.
+- Khối 1: viết Phiếu A và `config/acceptance_criteria.json`, ký thay mặt bàn trước lần chạy đầu tiên.
+- Khối 2A, câu 2.3 (B3): bản đồ dữ liệu của trợ lý hoàn tiền, nguồn sự thật và bản sao của từng trường then chốt, ví dụ drift REFUND-v3 sang REFUND-v4 ngày 2026-12-01.
+- Khối 2B, câu 2.9 (B7.4): điền mục `business` trong `config/operating_gates.json`. Trần hoàn tự động 2.000.000đ/ngày; ngân sách LLM 900đ/ticket (1.500đ trần trừ 600đ các lượt gọi sau bước đọc); `pilot_scope` giữ `all` ở v1; `roi_min` 0,6. Mỗi số kèm lý do từ `ops_limits`, `ops_facts`.
+- Xác nhận kênh cảnh báo `OPS-PILOT-GATE1` cho phần vận hành của Khoa.
+- Đã dùng trợ lý AI (Claude Code) để đọc code và dữ liệu mock, đo thử các phương án `business` trên bản sao repo (không ghi vào nhật ký chính thức) và soạn nháp B3, B7.4; số chính thức chờ Vĩnh đo lại.
 
 ### Bằng chứng
 
-Mã commit, mã lần chạy và dòng trong Phiếu A/B/C sẽ được bổ sung.
+- Commit ký tiêu chí `9726c53`; [Phiếu A](templates/form-a-criteria.md).
+- [Phiếu B, mục B3](templates/form-b-evaluation-gates.md#b3) và [B7.4](templates/form-b-evaluation-gates.md#b7); `config/operating_gates.json` mục `business`.
+- Mã lần chạy sau khi có `business`: chờ Vĩnh ghi ở B0.
 
 ### Exit ticket
 
