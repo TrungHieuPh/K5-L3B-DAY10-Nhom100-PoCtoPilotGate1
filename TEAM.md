@@ -79,57 +79,64 @@ Vai chính: Trưởng nhóm và Sản phẩm và kinh doanh. Chủ trì tiêu ch
 
 ### Phần việc phụ trách
 
-Vai chính: Kỹ sư cổng. Viết `lab10/guards.py`, chạy eval/trace/gate, thực hiện kiểm thử hành vi và hỗ trợ phân tích phản hồi vòng 2.
+Thành viên 2, vai **Kỹ sư cổng chính**. Phụ trách các câu 1.3, 2.1, 2.2, 2.6, 2.7, 2.8 và số liệu cho quyết định v1. Viết vào Phiếu A mục A2 (cột Offline) và Phiếu B mục B0, B1, B2, B7.1–B7.3, B8. File chính: `lab10/guards.py`, `lab10/monitors.py`. Chạy các lệnh `eval`, `trace`, `gate`, `criteria sign`, `checkpoint` của vòng 1. PIC ở B5 dòng 1 (Chất lượng), dòng 4 (Quyền hạn) và C11 dòng 1 (Chất lượng).
 
 ### Đóng góp cụ thể
 
-> Trưởng nhóm tổng hợp mục này từ Phiếu A, B, C và ghi chú bàn giao của Khoa ([docs/ban-giao-thanh-vien-3.md](docs/ban-giao-thanh-vien-3.md), [docs/bao-cao-thanh-vien-3.md](docs/bao-cao-thanh-vien-3.md)). Vĩnh cần đọc lại và sửa chỗ nào chưa đúng.
-
-- Khối 1, Phiếu A câu 1.3: viết cột Offline, tức metric offline cho bước ghi lỗi hãng. Khoa ghi "giữ cột Offline của Vĩnh" khi gộp A2.
-- Khối 2A:
-  - Chạy lần đánh giá đầu tiên (B1) và ghi hai run_id đầu ở B0 (base, after).
-  - Ghi trace `T-002@55` cho B2. Mai là người phân tích lỗi trên trace này.
-- Khối 2B, B7.1: viết cổng vòng 1 trong `lab10/guards.py`:
-  - số tiền hoàn tính theo tracking;
-  - chỉ ghi lỗi hãng khi có nguyên nhân đã ghi;
-  - cắt trường gửi hãng ngoài danh sách cho phép;
-  - ghim phiên bản chính sách theo ngày.
-- Cập nhật B7.1 và B0 dòng 4 sau khi Mai thêm lớp 1a (khách khai lệch tracking thì chuyển người).
-- Đo lại bộ nền sau khi tích hợp cấu hình `operations`/`legal` của Khoa và `business` của Hiếu. Chạy `lab10.checkpoint` chốt cổng vòng 1, mốc prepared `88d3403e` (B0 dòng 3).
-- Điền số liệu cho quyết định v1 ở B8. B8 ghi Vĩnh là "người điền số liệu".
-- PIC ở B5 dòng 1 (Chất lượng) và dòng 4 (Quyền hạn).
-- Ở Runbook 1 và 3 (B7.5): phụ trách hiện thực và kiểm kỹ thuật đường dừng, cùng NV-TUNG.
-- Vòng 2 (thẻ S3): PIC dòng 1 Chất lượng ở checklist C11. Code và các lần chạy vòng 2 làm trên máy Hiếu (xem mục của Hiếu).
+- **Câu 1.3 (A2, cột Offline):** metric "tỉ lệ ghi lỗi hãng oan" cho bước `file_carrier_fault`, gồm thước đo, dữ liệu (`fault_rows` so với `label.faults`, 110 lần chạy), cách tính và điểm mù.
+- **Ký tiêu chí:** chạy `lab10.criteria sign` trên máy Vĩnh, trưởng nhóm đồng ý và vẫn đứng tên `signed_by`. Commit ký lúc 16:07:45, lần eval đầu tiên lúc 16:07:55.
+- **Câu 2.1 (B0, B1):** chạy base và gate, ghi hai ngưỡng `[CHƯA]` (hoàn sai 20.000đ, 1 lỗi hãng oan). Viết bảng ủng hộ/phản đối và khuyến nghị **kết hợp**.
+- **Câu 2.2 (B2):** trace `T-002@55`, điền bảng soát lỗi lần đầu. Mai phân tích lại và hoàn thiện.
+- **Câu 2.6 (B7.1):** viết cổng vòng 1 trong `lab10/guards.py`. Cổng chỉ đọc nguồn sự thật, không xử lý riêng theo mã ticket.
+  - **Cổng 0 (`pre_guard`):** ghim chính sách theo ngày hiệu lực.
+  - **Cổng 1 (`issue_refund`):** số tiền hoàn tính lại từ tracking DB. Kèm chặn hoàn hai lần, chặn người trả khác LogiX, kiểm phê duyệt.
+  - **Cổng 2 (`file_carrier_fault`):** chỉ ghi lỗi hãng khi tracking có nguyên nhân thuộc lỗi hãng, và ghi đúng kiện bị trễ.
+  - **Cổng 3 (`notify_carrier`):** chỉ gửi cho hãng các trường chính sách cho phép.
+- **Câu 2.7 (B7.2):** hai bước tránh rò rỉ dữ liệu. **Câu 2.8 (B7.3):** tính chất và 2 ticket hiểm (`O-1004`, `O-1015`), chạy cả `--stage base` và `--stage after`.
+- **Sau khi Mai thêm lớp 1a** (khai lệch tracking thì chuyển người): đo lại, cập nhật B7.1 và B0 dòng 4, ghi rõ đánh đổi về tỉ lệ chuyển người.
+- **`lab10/monitors.py`:** viết 8 chỉ số theo dõi trước khi nhận thẻ. Trên S3 có 5 chỉ số sáng đèn ở mục `6 monitor` của grade.
+- **Chốt vòng 1:** chạy `lab10.checkpoint` (`88d3403e`), eval prepared và gate (9/9 `[ĐẠT]`), điền B0 dòng 3. Điền số liệu B8 và đề xuất v1 **Tiếp tục có điều kiện**; trưởng nhóm đứng tên PIC.
+- **Toàn vẹn bài nộp:** clone repo kiểu máy chấm (không tự đổi xuống dòng) và phát hiện bản chốt vòng 1 lệch hash `round1.lock` do CRLF. Sửa bằng `.gitattributes`, không đổi nội dung bản chụp.
+- **Hiệu quả trên thẻ S3** (cột prepared, Phiếu C mục C1): cổng vòng 1 viết trước khi biết thẻ đã đưa lỗi hãng oan 35 → 10, hoàn sai 900.000đ → 0, hoàn thiếu 667.000đ → 0. Code và lần chạy vòng 2 làm trên máy Hiếu.
+- Đã dùng trợ lý AI (Claude Code) để đọc code và dữ liệu mock, chạy lệnh, viết nháp cổng, monitor và các mục phiếu trên. Số liệu đều lấy từ các lần chạy có mã ở mục Bằng chứng.
 
 ### Bằng chứng
 
-- Phiếu B ghi rõ: "B0 có hai run_id do Vĩnh ghi, và `guards.py` có cổng ở `95e0912`" ([B4](templates/form-b-evaluation-gates.md#b4), dòng người phân tích). Thêm nữa: "B2 có trace do Vĩnh ghi" (B5 dòng 1) và "người điền số liệu: Ngô Chí Vĩnh" (B8).
-- Commit vòng 1 mang tên git `2A202603763 <2A202603763@example.com>`, đẩy từ một máy khác máy Hiếu. Gán cho Vĩnh theo các dòng phiếu trên; Vĩnh cần xác nhận.
+- **Commit:** đẩy từ máy Vĩnh với danh tính git `2A202603763 <2A202603763@example.com>` (MSSV trưởng nhóm, theo README bước 2a).
 
   | Commit | Nội dung |
   |---|---|
   | `b9f53ee` | Phiếu A câu 1.3 |
+  | `9726c53` | Sign acceptance criteria |
   | `95e0912` | Cổng vòng 1 trong `guards.py` |
   | `7df4754` | Phiếu B: B0, B1, B2, B7.1–B7.3 |
-  | `8d814f7` | B7.1 và B0 dòng 4 |
-  | `b2f4a0f` | 8 monitor vòng 1 |
-  | `32177ab`, `2b47d5a` | Chốt vòng 1 và giữ CRLF cho bản chốt |
-  | `c66532f` | B8 v1 |
+  | `8d814f7` | B7.1 và B0 dòng 4 sau lớp 1a |
+  | `b2f4a0f` | 8 chỉ số trong `monitors.py` |
+  | `32177ab`, `2b47d5a` | Chốt vòng 1, giữ CRLF cho bản chốt |
+  | `c66532f` | B8, quyết định v1 |
 
-- Mã lần chạy ở B0:
+- **Mã lần chạy:**
+  - Các lần chạy ghi ở B0:
 
-  | Dòng B0 | Mã |
-  |---|---|
-  | 1 · base | `R-base-before-20261119-160755-bde05c` |
-  | 2 · after | `R-base-after-20261119-161206-2543cf` |
-  | 4 · after, có lớp 1a | `R-base-after-20261119-164159-01762c` |
-  | 3 · prepared | `R-base-prepared-20261119-165616-9e4070` |
+    | Dòng B0 | Mã lần chạy |
+    |---|---|
+    | 1 · base | `R-base-before-20261119-160755-bde05c` |
+    | 2 · after | `R-base-after-20261119-161206-2543cf` |
+    | 4 · after, có lớp 1a | `R-base-after-20261119-164159-01762c` |
+    | 3 · prepared | `R-base-prepared-20261119-165616-9e4070` |
 
-- Nhật ký `runs/` của vòng 1 nằm trên máy Vĩnh, vì `runs/` bị gitignore. Vĩnh cần giữ journal và report gốc.
+  - Ngoài B0 còn 3 lần chạy khác: `R-base-after-20261119-164642-cd026d` (thêm monitor), `R-base-after-20261119-165536-9e4070` (bản cuối trước khi chốt) và `R-base-prepared-20261119-165622-9e4070`. Lần cuối là lần chạy nhầm, ghi chú "x", cùng kết quả với lần chính thức; giữ nguyên, không xóa khỏi nhật ký.
+  - Các lần chạy này nằm trong `runs/journal.jsonl` trên máy Vĩnh (`runs/` bị gitignore); Vĩnh giữ nguyên journal và report gốc.
+- **Dòng trong phiếu:**
+  - Phiếu A: A2, cột Offline.
+  - Phiếu B: B0 dòng 1–4; B1; B7.1–B7.3; B8 ("người điền số liệu: Ngô Chí Vĩnh").
+  - Phiếu C: C1 (cổng 0, 1, 2 đỡ 25/35 lỗi oan).
+  - Grade `R-S3-grade-20261119-172310-ea4958`: `6 monitor` ✅.
 
 ### Exit ticket
 
-_Vĩnh tự viết; trưởng nhóm không viết thay._ Một điều học được, một điều còn chưa chắc.
+- **Một điều học được:** cổng chỉ đáng tin khi đọc nguồn sự thật (tracking DB, chính sách theo ngày hiệu lực) thay vì lời khách. Nhờ vậy cổng vòng 1 đỡ được 25/35 lỗi oan trên S3 trước khi biết thẻ. Nhưng cổng xét từng ticket nên bỏ sót tác hại cộng dồn trong ngày, như lỗi thứ 3 của cùng một hãng.
+- **Một điều còn chưa chắc:** luật "khai lệch tracking ≥ 1 ngày thì chuyển người" có chuyển người cả ca hoàn đúng ở bài kiểm tra ẩn (cách viết khác) và đẩy `escalation_rate` (0.2364) vượt 0.25 hay không.
 
 ## LeVietKhoa-2A202603737
 
